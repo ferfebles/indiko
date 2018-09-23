@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>indiko</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <style>
+         html {text-align: center; zoom: 160%;}
+         p {font-size: 80%;}
+        </style>
+    </head>
+    <body>
+        <p><a href="https://github.com/ferfebles/indiko"
+              style='font-size:150%'>indiko</a><br>the amnesic pwd manager</p>
+
+        <div>
+            <input type="password" id="mstrpwd"
+                   onkeyup="enableWithLength(this, 16, 'account')"
+                   placeholder="m4ster pwd (size>15)" autofocus disabled>
+        </div>
+        <div>
+            <input type="text" id="account"
+                   onkeyup="enableWithLength(this, 4, 'dat3s')"
+                   placeholder="anyaccount@eg.gmail" disabled>
+        </div>
+
+        <br>
+
+        <div id="dat3s">
+            <div>
+                <button onclick="updateLabel(this)" disabled
+                        id="last_year" style='color: grey'>1969</button>
+                <button onclick="updateLabel(this)" disabled
+                        id="current_year">1970</button>
+                <button onclick="updateLabel(this)" disabled
+                        id="next_year" style='color: grey'>1971</button>
+            </div>
+            <div>
+                <button onclick="updateLabel(this)" disabled id="q1">Q1</button>
+                <button onclick="updateLabel(this)" disabled id="q2">Q2</button>
+                <button onclick="updateLabel(this)" disabled id="q3">Q3</button>
+                <button onclick="updateLabel(this)" disabled id="q4">Q4</button>
+            </div>
+        </div>
+
+        <br>
+
+        <div id="notice" style='font-size:75%'>enable javascript, please</div>
+        <div id="pwd" style='font-size:45%'></div>
+
+        <script>
+         var currentYear = (new Date()).getFullYear()
+
+         // Base64 encode
+         function encode64 (buff) {
+             return btoa(new Uint8Array(buff)
+                 .reduce((s, b) => s + String.fromCharCode(b), ''))
+         }
+
+         function selectChar (fromString, withChar) {
+             return fromString[(withChar.charCodeAt() % fromString.length)]
+         }
+
+         function replaceAt (string, index, replace) {
+             return (string.substring(0, index) +
+                     replace +
+                     string.substring(index + 1))
+         }
+
+         function normalizePWD (pwd) {
+             var lowerCase = 'abcdefghijklmnopqrstuvwxyz'
+             var lowerCaseRe = /[a-z]/
+             var upperCase = lowerCase.toUpperCase()
+             var upperCaseRe = /[A-Z]/
+             var digits = '0123456789'
+             var digitsRe = /[0-9]/
+             var symbols = '!@#%&=_:,;<>$|.+/'
+             var symbolsRe = /[!@#%&=_:,;<>$|.+/]/
+             var i = pwd.length - 1
+
+             if (!(pwd.match(lowerCaseRe))) {
+                 pwd = replaceAt(pwd, i, selectChar(lowerCase, pwd[i]))
+                 i--
+             }
+
+             if (!(pwd.match(upperCaseRe))) {
+                 pwd = replaceAt(pwd, i, selectChar(upperCase, pwd[i]))
+                 i--
+             }
+
+             if (!(pwd.match(digitsRe))) {
+                 pwd = replaceAt(pwd, i, selectChar(digits, pwd[i]))
+                 i--
+             }
+
+             if (!(pwd.match(symbolsRe))) {
+                 pwd = replaceAt(pwd, i, selectChar(symbols, pwd[i]))
+                 i--
+             }
+
+             return pwd
+         }
+
+         function str2ArrBuff (string) {
+             var encoder = new TextEncoder('utf-8')
+             return encoder.encode(string)
+         }
+
+         function enableWithLength (e, minLength, id) {
+             var i
+             var newDisabledValue = (e.value.length < minLength)
+             var elements = document.getElementById(id).querySelectorAll('*')
+
+             document.getElementById(id).disabled = newDisabledValue
+             for (i = 0; i < elements.length; i++) {
+                 elements[i].disabled = newDisabledValue
+             }
+         }
+
+         function copyPBKDF2 (rawKey, salt, button) {
+             crypto.subtle.importKey('raw', str2ArrBuff(rawKey),
+                                     'PBKDF2', false, ['deriveBits'])
+                   .then(baseKey => {
+                       return crypto.subtle.deriveBits(
+                           {name: 'PBKDF2',
+                            salt: str2ArrBuff(salt),
+                            iterations: 100000,
+                            hash: 'sha-512'},
+                           baseKey,
+                           192)
+                   })
+                   .then(result => {
+                       var pwd = normalizePWD(encode64(result))
+
+                       if (navigator.clipboard) {
+                           navigator.clipboard.writeText(pwd).then(function () {
+                               document.getElementById('notice').textContent =
+                                   'pwd for ' + button + ' copied'
+                           })
+                       } else {
+                           document.getElementById('notice').textContent =
+                               'pwd for ' + button
+                           document.getElementById('pwd').textContent = pwd
+                       }
+                   })
+                   .catch(err => { alert('Key derivation failed: ' + err.message) })
+         }
+
+         function updateLabel (e) {
+             if (e.id === 'last_year') { currentYear-- }
+             if (e.id === 'next_year') { currentYear++ }
+             copyPBKDF2((document.getElementById('mstrpwd').value),
+                        (document.getElementById('account').value +
+                         e.textContent + currentYear.toString()),
+                        e.textContent)
+             updateDateButtons()
+         }
+
+         function updateDateButtons () {
+             document.getElementById('last_year').textContent =
+                 (currentYear - 1).toString()
+             document.getElementById('current_year').textContent =
+                 currentYear.toString()
+             document.getElementById('next_year').textContent =
+                 (currentYear + 1).toString()
+         }
+
+         function initChecks () {
+             var noticeHtml = ''
+
+             document.getElementById('mstrpwd').disabled = false
+             updateDateButtons()
+             if (!(window.crypto && crypto.subtle)) {
+                 noticeHtml = 'Web Crypto <a href="https://ferfebles.github.com/indiko">not supported</a>!'
+             } else if (!(navigator.clipboard)) {
+                 noticeHtml = 'Clipboard <a href="https://ferfebles.github.com/indiko">not supported</a>!'
+             }
+             document.getElementById('notice').innerHTML = noticeHtml
+         }
+
+         initChecks()
+        </script>
+    </body>
+</html>
