@@ -1,0 +1,12 @@
+* Usage
+1- Only mstrpwd enabled, all the rest disabled.
+2- Once mstrpwd.length > 16 then account disabled
+3- Once account.length > 2 then dat3pwds disabled
+4- We can change kdf in the future: the current kdf will be used for dates before the new version, and the new kdf for dates after.
+** dat3pwds
+1- < (year-before) (1) (2) (3) (4) (current-year) (1) (2) (3) (4) (next-year) >
+2- when clicked < or >, change current-year
+3- colours for buttons: fadded - currentish_date - fadded
+4- when clicked, mark pressed button, generate pwd and copy to clipboard
+5- after 10s copy '' to clipboard and unmark pressed button
+6- if another button pressed while waiting to clean clipboard: unmark previous (all) button, clear timeout and goto 4
