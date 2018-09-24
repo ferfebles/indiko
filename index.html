@@ -61,44 +61,17 @@
              return fromString[(withChar.charCodeAt() % fromString.length)]
          }
 
-         function replaceAt (string, index, replace) {
-             return (string.substring(0, index) +
-                     replace +
-                     string.substring(index + 1))
-         }
-
-         function normalizePWD (pwd) {
+         function fulfilPWDRequirements (pwd) {
              var lowerCase = 'abcdefghijklmnopqrstuvwxyz'
-             var lowerCaseRe = /[a-z]/
              var upperCase = lowerCase.toUpperCase()
-             var upperCaseRe = /[A-Z]/
              var digits = '0123456789'
-             var digitsRe = /[0-9]/
              var symbols = '!@#%&=_:,;<>$|.+/'
-             var symbolsRe = /[!@#%&=_:,;<>$|.+/]/
-             var i = pwd.length - 1
 
-             if (!(pwd.match(lowerCaseRe))) {
-                 pwd = replaceAt(pwd, i, selectChar(lowerCase, pwd[i]))
-                 i--
-             }
-
-             if (!(pwd.match(upperCaseRe))) {
-                 pwd = replaceAt(pwd, i, selectChar(upperCase, pwd[i]))
-                 i--
-             }
-
-             if (!(pwd.match(digitsRe))) {
-                 pwd = replaceAt(pwd, i, selectChar(digits, pwd[i]))
-                 i--
-             }
-
-             if (!(pwd.match(symbolsRe))) {
-                 pwd = replaceAt(pwd, i, selectChar(symbols, pwd[i]))
-                 i--
-             }
-
-             return pwd
+             return selectChar(lowerCase, pwd[0]) +
+                    selectChar(upperCase, pwd[1]) +
+                    selectChar(digits, pwd[2]) +
+                    selectChar(symbols, pwd[3]) +
+                    pwd.substring(4)
          }
 
          function str2ArrBuff (string) {
@@ -130,7 +103,7 @@
                            192)
                    })
                    .then(result => {
-                       var pwd = normalizePWD(encode64(result))
+                       var pwd = fulfilPWDRequirements(encode64(result))
 
                        if (navigator.clipboard) {
                            navigator.clipboard.writeText(pwd).then(function () {
