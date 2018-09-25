@@ -1,11 +1,11 @@
-# indiko
+# [indiko](https://ferfebles.github.io/indiko/)
 the amnesic pwd manager
 
 # why
 can't remember my passwords, nor want a pwd manager account
 
 # how
-enter your master pwd, then your account [reminder] and press the current year button
+open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then your account [reminder] and press the current year button
 
 # security
 * No dependencies on external libraries
