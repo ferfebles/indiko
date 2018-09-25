@@ -14,6 +14,7 @@ open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then 
 * It derives a 192 bits pwd (32 chars in Base64) from your master password with your account [reminder] + year as salt
 
 # but
+* I don't like the page! *I favored simplicity and auditability over styling and dependencies*
 * Can my master pwd be smaller than 16 chars? *No*
 * Do I need to remember the year for my password? *Yes. Or change your passwords on new year's day*
 * My password expires in 90 days! *Use the quarter 'Q1-Q4' buttons*
