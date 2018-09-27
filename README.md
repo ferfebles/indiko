@@ -11,9 +11,22 @@ open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then 
 * No dependencies on external libraries
 * Just a single HTML file with some easily auditable javascript
 * Uses PBKDF2 from your browser crypto API (remember, no external dependencies) with 100.000 iterations
-* It derives a 192 bits pwd (32 chars in Base64) from your master password with your account [reminder] + year as salt
+* It derives a 192 bits pwd (32 chars in Base64) from your master password with your 'account + year' as salt
 
 # but
+
+* It says "[Web Crypto|Clipboard] not supported"
+
+  *Try Chrome*
+  
+* With Chrome it still says "Clipboard not supported"
+
+  *You're probably using iOS, where all browsers use Safari rendering engine. Sorry but you have to wait for Safari "navigator.clipboard" support. 
+
+* But I want to use {browser}?
+
+  *It needs support for crypto [and copy] APIs. Try the latest version of your preferred browser*
+
 * I don't like the page!
 
   *I favored simplicity and auditability over styling and dependencies*
@@ -26,9 +39,9 @@ open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then 
 
   *Yes. Or change all your passwords on new year's day and use always the current year*
   
-* My password expires in 90 days!
+* My password expires every 90 days!
 
-  *Use the quarter 'Q1-Q4' buttons*
+  *Start with 'year', then use the quarter 'Q1-Q4' buttons*
   
 * I need the password from five years ago!
 
@@ -38,14 +51,6 @@ open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then 
 
   *Use another service*
   
-* It doesn't work with {browser}?
-
-  *Try Chrome*
-
-* But I want to use {browser}?
-
-  *It needs support for crypto [and copy] APIs. Try the latest version of your preferred browser*
-
 * I don't trust your website!
 
   *Download the HTML file and open it in an [isolated computer](https://en.wikipedia.org/wiki/Air_gap_(networking))*
