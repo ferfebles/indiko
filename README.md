@@ -21,7 +21,7 @@ open [indiko](https://ferfebles.github.io/indiko/), enter your master pwd, then 
   
 * With Chrome it still says "Clipboard not supported"
 
-  *You're probably using iOS, where all browsers use Safari rendering engine. Sorry but you have to wait for Safari "navigator.clipboard" support. 
+  *You're probably using iOS, where all browsers use Safari rendering engine. Sorry but you have to wait for Safari "navigator.clipboard" support*
 
 * But I want to use {browser}?
 
