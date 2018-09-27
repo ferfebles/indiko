@@ -144,9 +144,9 @@
              document.getElementById('mstrpwd').disabled = false
              updateDateButtons()
              if (!(window.crypto && crypto.subtle)) {
-                 noticeHtml = 'Web Crypto <a href="https://ferfebles.github.com/indiko">not supported</a>!'
+                 noticeHtml = 'Web Crypto <a href="https://github.com/ferfebles/indiko#but">not supported</a>!'
              } else if (!(navigator.clipboard)) {
-                 noticeHtml = 'Clipboard <a href="https://ferfebles.github.com/indiko">not supported</a>!'
+                 noticeHtml = 'Clipboard <a href="https://github.com/ferfebles/indiko#but">not supported</a>!'
              }
              document.getElementById('notice').innerHTML = noticeHtml
          }
